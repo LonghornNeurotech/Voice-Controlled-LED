@@ -2,21 +2,6 @@
 
 A machine learning project that enables voice-activated LED control using a Raspberry Pi 4B. The system detects the keywords "Pi on" and "Pi off" using a quantized PyTorch model running directly on the Raspberry Pi, demonstrating edge AI capabilities for keyword detection.
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Materials](#materials)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
-- [Hardware Configuration](#hardware-configuration)
-- [Data Collection](#data-collection)
-- [Model Training](#model-training)
-- [Real-Time Inference](#real-time-inference)
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [Deliverables](#deliverables)
-- [Contributing](#contributing)
-
 ## Overview
 
 This project implements a voice-controlled LED system that:
@@ -40,40 +25,12 @@ The system classifies audio into three categories:
 - **2 Resistors** (470Ω recommended, or appropriate for your LEDs)
 - **Jumper wires**
 - **Solderless breadboard**
-- **Ethernet cable**
 
 ### Software Requirements
 - Python 3.x
-- PyTorch (with quantization support)
-- Required Python packages (see `requirements.txt`)
+- PyTorch
+- Required Python packages
 
-## Project Structure
-
-```
-Voice-Controlled-LED/
-├── README.md                 # This file
-├── requirements.txt          # Python dependencies
-├── voice-recorder.py         # Data collection script (USB mic)
-├── led_control.py            # GPIO LED toggle script (for USB mic recorder)
-├── led_control_inmp441.py    # GPIO LED control for INMP441 inference
-├── inference.py              # Real-time inference script
-├── microphone_driver.py      # INMP441 I2S driver
-├── validate_data.py          # Data validation script
-├── model/
-│   ├── architecture.py         # PyTorch model definition
-│   └── weights/              # Trained model weights (.pt/.pth files) - created during training
-├── data/                     # Audio data directory - create and add your recordings
-│   ├── pi_on/                # "Pi on" audio samples
-│   ├── pi_off/               # "Pi off" audio samples
-│   └── background/           # Background noise samples
-├── preprocessing/
-│   ├── __init__.py           # Module initialization
-│   └── preprocessing.py      # Master preprocessing script (team collaborates here)
-├── training/
-│   ├── __init__.py           # Module initialization
-│   └── training.py           # Master training script (team collaborates here)
-└── colab_training.ipynb      # Colab training notebook (optional)
-```
 
 ## Setup Instructions
 
@@ -81,7 +38,6 @@ Voice-Controlled-LED/
 
 #### a) Initial Setup
 - Install Raspberry Pi OS on the board if not already installed
-- Ensure you have necessary cables/wires to connect to the board
 - Set up SSH or direct access to the Pi
 
 #### b) Python and PyTorch Installation
@@ -104,14 +60,10 @@ pip3 install -r requirements.txt
 #### LED Circuits
 
 **LED 1 - USB Microphone Recorder** (controlled by `voice-recorder.py`):
-- Connect LED cathode (short leg) to ground via resistor (470Ω)
-- Connect LED anode (long leg) to GPIO pin (e.g., GPIO 18)
 - **GPIO Pin**: Documented in `led_control.py` (default: GPIO 18)
 - **Resistor Value**: 470Ω (or appropriate for your LED)
 
 **LED 2 - INMP441 Inference** (controlled by `inference.py`):
-- Connect LED cathode (short leg) to ground via resistor (470Ω)
-- Connect LED anode (long leg) to GPIO pin (e.g., GPIO 21)
 - **GPIO Pin**: Documented in `led_control_inmp441.py` (default: GPIO 21)
 - **Resistor Value**: 470Ω (or appropriate for your LED)
 
@@ -185,24 +137,8 @@ python3 validate_data.py
 
 ## Model Training
 
-### Collaboration Workflow
-All team members collaborate on a single master file using Git branches and Pull Requests:
-- **Preprocessing**: `preprocessing/preprocessing.py` - Master preprocessing script
-- **Training**: `training/training.py` - Master training script
-
-**Workflow**:
-1. Create a feature branch: `git checkout -b feature-name`
-2. Edit the master file(s) with your contributions
-3. Commit and push: `git push origin feature-name`
-4. Open a Pull Request for team review
-5. Merge after approval
-
-All functionality is consolidated in the master files:
-- `preprocessing/preprocessing.py` - Contains all preprocessing classes and utilities
-- `training/training.py` - Contains all training classes and utilities
-
 ### Preprocessing
-The master preprocessing script (`preprocessing/preprocessing.py`) contains the `VoicePreprocessor` and `VoiceDataset` classes. Team members should contribute preprocessing steps such as:
+Preprocessing steps include:
 - Normalization
 - Feature extraction (MFCC, spectrograms, mel-spectrograms, etc.)
 - Data augmentation (time shifting, pitch shifting, noise injection, etc.)
@@ -210,7 +146,6 @@ The master preprocessing script (`preprocessing/preprocessing.py`) contains the 
 - Filtering and denoising
 
 ### Training Process
-The master training script (`training/training.py`) provides a simple training pipeline:
 1. **Train/Validation Split**: Automatically splits data into training and validation sets
 2. **Training Loop**: Standard PyTorch training with loss and accuracy tracking
 3. **Model Saving**: Saves the best model based on validation accuracy
@@ -266,7 +201,7 @@ Implement smoothing/filtering to prevent LED flickering:
 - Confidence thresholding
 - State change debouncing
 
-## 📦 Requirements
+## Requirements
 
 Install dependencies:
 ```bash
@@ -283,7 +218,7 @@ pip install -r requirements.txt
 
 See `requirements.txt` for complete list with versions.
 
-## 💻 Usage
+## Usage
 
 ### 1. LED Toggle Test
 ```bash
@@ -320,30 +255,3 @@ python3 training/training.py --data_dir ./data --epochs 50 --batch_size 32 --lr 
 ```bash
 python3 inference.py
 ```
-
-### 1. Working System
-- ✅ Keyword detection model running on Raspberry Pi 4B
-- ✅ LED responds to "Pi on" and "Pi off" commands
-- ✅ Handles background noise without false triggers
-
-### 2. GitHub Repository
-- ✅ Well-organized code structure
-- ✅ Microphone driver
-- ✅ Data collection scripts
-- ✅ Model architecture and weights
-- ✅ LED control scripts
-- ✅ Real-time inference pipeline
-- ✅ `requirements.txt` with versions
-
-
-### 3. Demo Video
-Short video demonstrating:
-- Saying "Pi on" → LED turns on
-- Saying "Pi off" → LED turns off
-- Background noise/conversation → LED remains unchanged
-
-
-## Related Projects
-
-- **EEG Motor Imagery Classification**: [Dataset](https://www.kaggle.com/datasets/aymanmostafa11/eeg-motor-imagery-bciciv-2a)
-- **EMG Gesture Recognition**: [Dataset](https://physionet.org/content/grabmyo/1.1.1/#files-panel)
